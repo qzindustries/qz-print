@@ -523,6 +523,15 @@ public class PrintApplet extends Applet {
                     + charset + ". Using default.", e);
         }
     }
+
+    /**
+     * Gets the paper width of current printer
+     * 
+     * @return currentPrinter paper width
+     */
+    public Double getPaperWidth(){
+        return spooler.getPaperWidth();
+    }
     
     /**
      * Set the paper size for new jobs.
