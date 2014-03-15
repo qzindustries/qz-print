@@ -25,6 +25,7 @@ import java.applet.Applet;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.print.PrintException;
 import javax.print.PrintService;
 import jssc.SerialPort;
@@ -133,16 +134,9 @@ public class SerialPrinter implements Printer {
      * findPorts starts the process of finding the list of serial ports.
      */
     public void findPorts() {
-        
-        LogIt.log("Serial Printer now finding ports.");
-        
-        AccessController.doPrivileged(new PrivilegedAction<Object>() {
-            public Object run() {
-                fetchPortList();
-                return null;
-            }
-        });
- 
+        SerialPortFinder finder = new SerialPortFinder(this);
+        Thread finderThread = new Thread(finder);
+        finderThread.start();
     }
 
     /**
@@ -336,28 +330,12 @@ public class SerialPrinter implements Printer {
         this.timeout = timeout;
     }
     
-    /**
-     * Fetch a list of available serial ports and set the serialPorts variable.
-     */
-    public void fetchPortList() {
-        try {
-            StringBuilder sb = new StringBuilder();
-            portArray = SerialPortList.getPortNames();
-            for (int i = 0; i < portArray.length; i++) {
-                sb.append(portArray[i]).append(i < portArray.length - 1 ? "," : "");
-            }
-            serialPorts = sb.toString();
-            serialPortsFound = true;
-            LogIt.log("Found Serial Ports: " + serialPorts);
-        }
-        catch (NullPointerException ex) {
-            LogIt.log(Level.SEVERE, "Null pointer.", ex);
-        }
-        catch (NoClassDefFoundError ex) {
-            LogIt.log(Level.SEVERE, "Problem communicating with the JSSC class.", ex);
-        }
+    public void doneFindingPorts(String serialPorts, Boolean serialPortsFound) {
+        this.serialPorts = serialPorts;
+        this.serialPortsFound = serialPortsFound;
+        btools.notifyBrowser("qzDoneFindingPorts");
     }
-
+    
     /**
      * A listener that is attached to the serial port when data is sent to
      * monitor for any returned data.

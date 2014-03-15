@@ -658,8 +658,6 @@ public class PrintApplet extends Applet {
      */
     public void findNetworkInfo() {
         spooler.findNetworkInfo();
-        // Deprecated callback. Remove in a future version.
-        btools.notifyBrowser("qzDoneFindingNetwork");
     }
     
     /**
@@ -709,7 +707,6 @@ public class PrintApplet extends Applet {
      */
     public void findPorts() {
         spooler.findPorts();
-        btools.notifyBrowser("qzDoneFindingPorts");
     }
     
     /**

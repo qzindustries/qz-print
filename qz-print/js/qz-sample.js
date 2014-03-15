@@ -675,12 +675,19 @@ function printHTML(leftMargin, topMargin) {
 ***************************************************************************/ 
 function listNetworkInfo() {
 	if (isLoaded()) {
+		
+		// Gets called when findNetworkInfo() finishes
+		window['qzDoneFindingNetwork'] = function() {
+			alert("Primary adapter found: " + qz.getMac() + ", IP: " + qz.getIP());
+			window['qzDoneFindingNetwork'] = null;
+		}
+	
 		// Makes a quick connection to www.google.com to determine the active interface
 		// Note, if you don't wish to use google.com, you can customize the host and port
 		// qz.getNetworkUtilities().setHostname("qzindustries.com");
 		// qz.getNetworkUtilities().setPort(80);
 		qz.findNetworkInfo();
-		alert("Primary adapter found: " + qz.getMac() + ", IP: " + qz.getIP());
+		
 	}
 }
 
