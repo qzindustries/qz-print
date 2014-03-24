@@ -102,6 +102,38 @@ a.button {
 	padding: 15px;
 }*/
 
+div#tabs-label{
+    padding: 15px;
+    width: 300px;
+    float:left; 
+}
+
 div#queue {
 	padding: 15px;
+}
+
+div#EPL_raw_options {
+	display: none;
+	padding: 15px;
+	float: left;
+    width: 200px;
+	border: none;
+	background: none;
+}
+
+div#postscript_options {
+	display: none;
+	padding: 15px;
+	float: left;
+    width: 200px;
+	border: none;
+	background: none;
+}
+
+input#open_port {
+width: 50px;
+}
+
+input#port_name {
+width: 50px;
 }
