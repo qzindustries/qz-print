@@ -157,14 +157,17 @@ $(document).ready(function() {
 	
 	
 	/**
-	* Print functions to respond to radio button clicks. Grab the value of the radio button that has been selected and alert RAW, POSTSCRIPT or DISABLED
+	* Show advanced options depending on which radio button is selected.
 	*/
 	$('#label_print_advanced').click(function(event) { showAdvancedOptions2($(this));});
+	$('#receipt_print_advanced').click(function(event) { showAdvancedOptions2($(this));});
+	$('#ticket_print_advanced').click(function(event) { showAdvancedOptions2($(this));});
+	$('#document_print_advanced').click(function(event) { showAdvancedOptions2($(this));});
 	
 	
-	$('input[name=receipt_print_format]').click(function(event) { showAdvancedOptions($(this));});
-	$('input[name=ticket_print_format]').click(function(event) { showAdvancedOptions($(this));});
-	$('input[name=document_print_format]').click(function(event) { showAdvancedOptions($(this));});
+	//$('input[name=receipt_print_format]').click(function(event) { showAdvancedOptions($(this));});
+	//$('input[name=ticket_print_format]').click(function(event) { showAdvancedOptions($(this));});
+	//$('input[name=document_print_format]').click(function(event) { showAdvancedOptions($(this));});
 	
 	$('#list_serial_ports_button').click(function(event) {listSerialPorts();});
 	$('#open_port_button').click(function(event) { openSerialPort();});

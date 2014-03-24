@@ -108,6 +108,24 @@ div#tabs-label{
     float:left; 
 }
 
+div#tabs-receipt{
+    padding: 15px;
+    width: 300px;
+    float:left; 
+}
+
+div#tabs-ticket{
+    padding: 15px;
+    width: 300px;
+    float:left; 
+}
+
+div#tabs-document{
+    padding: 15px;
+    width: 300px;
+    float:left; 
+}
+
 div#queue {
 	padding: 15px;
 }
