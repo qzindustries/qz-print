@@ -109,10 +109,25 @@ $(document).ready(function() {
 		{
 			$('#EPL_raw_options').show();
 			$('#postscript_options').hide();
+			$('#label_print_button').hide();
 		} else if ($('#label_print_advanced').not(":checked")) {
+			$('#label_print_button').show();
 			$('#EPL_raw_options').hide();
 			$('#postscript_options').hide();
 		}
+		
+		
+		/**
+		* Determine which print format radio button is checked when 'Advanced Printing Options' is checked
+		*/
+		//if (($('#label_print_advanced').is(":checked")) && (document.getElementById("EPL-RAW").checked))
+		//{
+		//	$('#EPL_raw_options').show();
+		//	$('#postscript_options').hide();
+		//} else if (($('#label_print_advanced').is(":checked")) && (document.getElementById("ZPL-RAW").checked)) {
+		//	$('#EPL_raw_options').hide();
+		//	$('#postscript_options').show();
+		//}
 		
 		
 		
@@ -237,13 +252,13 @@ $(document).ready(function() {
 });
 
 function print(caller, event) {
-	//alert("print function");
-	//alert("caller id: " + caller.id);
+	alert("print function");
+	alert("caller id: " + caller.id);
 	// Translate label_print_button to label_print_format
 	var formatName = caller.id.replace('button', 'format');
-	//alert("formatName: " + formatName);
+	alert("formatName: " + formatName);
 	var format = $('input[name=' + formatName + ']:checked').val();
-	//alert("format: " + format);
+	alert("format: " + format);
 
 	console.log("Print Label! Format: " + format);
 
