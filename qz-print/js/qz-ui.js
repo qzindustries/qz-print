@@ -76,6 +76,11 @@ $(document).ready(function() {
 	$('#printer_select').menu(
 		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
 	);
+	
+	$('#ps_advanced_print_button').button();
+	$('#printer_select').menu(
+		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
+	);
 		
 	//$('.printer_select').menu('disable');
 	$('#printer_menu').menu(
@@ -105,15 +110,16 @@ $(document).ready(function() {
 	
 	function showAdvancedOptions2(caller) {
 		
+		
 		if ($('#label_print_advanced').is(":checked"))
 		{
 			$('#EPL_raw_options').show();
 			$('#postscript_options').hide();
 			$('#label_print_button').hide();
 		} else if ($('#label_print_advanced').not(":checked")) {
+			$('#postscript_options').hide();
 			$('#label_print_button').show();
 			$('#EPL_raw_options').hide();
-			$('#postscript_options').hide();
 		}
 		
 		
@@ -169,6 +175,31 @@ $(document).ready(function() {
 		}
 
 	}
+	
+	
+	/**
+		* Listener to determine when a radio button was changed and show the 
+		* correct advanced printing options
+		*/
+		
+		$('input:radio').on('change', function(){
+		var val = $(this).val();
+			if (($('#label_print_advanced').is(":checked")) && (val.indexOf('RAW') != -1))
+			{
+				$('#EPL_raw_options').show();
+				$('#postscript_options').hide();
+				$('#label_print_button').hide();
+			} else if (($('#label_print_advanced').is(":checked")) && (val.indexOf('PS') != -1)) {
+				$('#postscript_options').show();
+				$('#label_print_button').hide();
+				$('#EPL_raw_options').hide();
+			} else if ($('#label_print_advanced').not(":checked")) {
+				$('#label_print_button').show();
+				$('#postscript_options').hide();
+				$('#EPL_raw_options').hide();
+			} else {
+			}
+		});
 	
 	
 	/**
@@ -252,13 +283,13 @@ $(document).ready(function() {
 });
 
 function print(caller, event) {
-	alert("print function");
-	alert("caller id: " + caller.id);
+	//alert("print function");
+	//alert("caller id: " + caller.id);
 	// Translate label_print_button to label_print_format
 	var formatName = caller.id.replace('button', 'format');
-	alert("formatName: " + formatName);
+	//alert("formatName: " + formatName);
 	var format = $('input[name=' + formatName + ']:checked').val();
-	alert("format: " + format);
+	//alert("format: " + format);
 
 	console.log("Print Label! Format: " + format);
 
