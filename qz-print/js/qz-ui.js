@@ -110,61 +110,43 @@ $(document).ready(function() {
 	/**
 	* Shows/Hides the advanced options
 	*/	
-	function showAdvancedOptions2(caller) {
+	function showAdvancedOptions(caller) {
+		// Get the radio selector that applies to this checkbox
+		var radioName = $(caller).attr('id').replace('advanced', 'format');
 		
+		// Grab the checked item
+		var radio = $('input[name=' + radioName + ']:checked').val();
 		
-		if ($('#label_print_advanced').is(":checked"))
-		{
-			$('#EPL_raw_options').show();
-			$('#postscript_options').hide();
-			$('#label_print_button').hide();
-		} else if ($('#label_print_advanced').not(":checked")) {
-			$('#postscript_options').hide();
-			$('#label_print_button').show();
-			$('#EPL_raw_options').hide();
-		}
-}
-	
-	/**
-	* Shows/Hides the advanced options
-	*/
-	function showAdvancedOptions(caller) { 
-
-		var val = $(caller).val();
-		if (val.indexOf('EPL-RAW') !== -1) {
-			$('#EPL_raw_options').show();
-			$('#postscript_options').hide();
-		} else if (val.indexOf('-PS') !== -1) {
-			$('#postscript_options').show();
-			$('#EPL_raw_options').hide();
+		// Prepare a warning message
+		var alertMessage = "Sorry, " + $(caller).attr('id') + ".click() event for " + radioName + " Not implemented!";
+		
+		// Show/Hide the appropriate Advanced Dialogue
+		if (typeof radio === 'undefined') {
+			alert(alertMessage);
+		} else if (radio.indexOf('-RAW') !== -1) {
+			$('#raw_options').toggle();
+		} else if (radio.indexOf('-PS') !== -1) {
+			$('#postscript_options').toggle();
 		} else {
-			alert("DISABLED!");
+		    alert(alertMessage);
 		}
-
 	}
-	
 	
 	/**
 	* Listener to determine when a radio button was changed and show the 
 	* correct advanced printing options
 	*/
 	
-	$('input:radio').on('change', function(){
+	// Add listener, but only for radio items names ending in  "_print_format"
+	$('input:radio').filter('[name$=_print_format]').on('change', function(){
 	var val = $(this).val();
-		if (($('#label_print_advanced').is(":checked")) && (val.indexOf('RAW') != -1))
-		{
-			$('#EPL_raw_options').show();
-			$('#postscript_options').hide();
-			$('#label_print_button').hide();
-		} else if (($('#label_print_advanced').is(":checked")) && (val.indexOf('PS') != -1)) {
-			$('#postscript_options').show();
-			$('#label_print_button').hide();
-			$('#EPL_raw_options').hide();
-		} else if ($('#label_print_advanced').not(":checked")) {
-			$('#label_print_button').show();
-			$('#postscript_options').hide();
-			$('#EPL_raw_options').hide();
-		} else {
+		// Get the appropriate advanced checkbox id for this tab
+		var advancedName = $(this).attr('name').replace('format', 'advanced');
+		var advanced = $('#' + advancedName);
+		
+		if (advanced.is(":checked")) {
+			advanced.click();
+			advanced.click();
 		}
 	});
 	
@@ -174,7 +156,7 @@ $(document).ready(function() {
 	* NOT FINISHED
 	*/
 	$("#tabs").on('tabsactivate', function(event, ui) {
-		$('#label_print_advanced').attr('checked', false)
+		//$('#label_print_advanced').attr('checked', false)
 		$('#EPL_raw_options').hide();
 		$('#postscript_options').hide();
 		$('#label_print_button').hide();
@@ -184,10 +166,10 @@ $(document).ready(function() {
 	/**
 	* Show advanced options depending on which radio button is selected.
 	*/
-	$('#label_print_advanced').click(function(event) { showAdvancedOptions2($(this));});
-	$('#receipt_print_advanced').click(function(event) { showAdvancedOptions2($(this));});
-	$('#ticket_print_advanced').click(function(event) { showAdvancedOptions2($(this));});
-	$('#document_print_advanced').click(function(event) { showAdvancedOptions2($(this));});
+	$('#label_print_advanced').click(function(event) { showAdvancedOptions($(this));});
+	$('#receipt_print_advanced').click(function(event) { showAdvancedOptions($(this));});
+	$('#ticket_print_advanced').click(function(event) { showAdvancedOptions($(this));});
+	$('#document_print_advanced').click(function(event) { showAdvancedOptions($(this));});
 	
 	
 	//$('input[name=receipt_print_format]').click(function(event) { showAdvancedOptions($(this));});
