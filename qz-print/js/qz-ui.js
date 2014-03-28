@@ -171,6 +171,7 @@ $(document).ready(function() {
 	
 	/**
 	* Unchecks Advanced Printing Options and hides the advanced options when clicking on a tab
+	* NOT FINISHED
 	*/
 	$("#tabs").on('tabsactivate', function(event, ui) {
 		$('#label_print_advanced').attr('checked', false)
