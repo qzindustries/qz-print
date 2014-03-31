@@ -139,7 +139,6 @@ $(document).ready(function() {
 	
 	// Add listener, but only for radio items names ending in  "_print_format"
 	$('input:radio').filter('[name$=_print_format]').on('change', function(){
-	var val = $(this).val();
 		// Get the appropriate advanced checkbox id for this tab
 		var advancedName = $(this).attr('name').replace('format', 'advanced');
 		var advanced = $('#' + advancedName);
