@@ -124,9 +124,9 @@ $(document).ready(function() {
 		if (typeof radio === 'undefined') {
 			alert(alertMessage);
 		} else if (radio.indexOf('-RAW') !== -1) {
-			$('#raw_options').toggle();
+		
 		} else if (radio.indexOf('-PS') !== -1) {
-			$('#postscript_options').toggle();
+			
 		} else {
 		    alert(alertMessage);
 		}
@@ -146,22 +146,13 @@ $(document).ready(function() {
 		if (advanced.is(":checked")) {
 			advanced.click();
 			advanced.click();
+			var showOrHide = ($(this).val().split('-')[1] == 'RAW') ? true:false;
+			$('#raw_options').toggle(showOrHide);
+			var showOrHide = ($(this).val().split('-')[1] == 'PS') ? true:false;
+			$('#postscript_options').toggle(showOrHide);
 		}
 	});
-	
-	
-	/**
-	* Unchecks Advanced Printing Options and hides the advanced options when clicking on a tab
-	* NOT FINISHED
-	*/
-	$("#tabs").on('tabsactivate', function(event, ui) {
-		//$('#label_print_advanced').attr('checked', false)
-		$('#EPL_raw_options').hide();
-		$('#postscript_options').hide();
-		$('#label_print_button').hide();
-	});
-	
-	
+		
 	/**
 	* Show advanced options depending on which radio button is selected.
 	*/
