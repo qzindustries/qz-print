@@ -115,7 +115,7 @@ public class PrintJobElement {
      * @throws NullCommandException 
      */
     public void prepare() throws IOException, InvalidRawImageException, NullCommandException {
-        PrintJobElementPreparer preparer = new PrintJobElementPreparer(type, data, charset, lang, dotDensity, imageX, imageY, xmlTag, this);
+        PrintJobElementPreparer preparer = new PrintJobElementPreparer(type, data, charset, this);
         Thread preparerThread = new Thread(preparer);
         preparerThread.start();
     }
@@ -239,5 +239,45 @@ public class PrintJobElement {
      */
     public int getRtfWidth() {
         return rtfEditor.getWidth();
+    }
+    
+    /**
+     * This function returns the LanguageType associated with this element
+     * @return The LanguageType associated with this element
+     */
+    public LanguageType getLang() {
+        return lang;
+    }
+    
+    /**
+     * This function returns the dot density associated with this element
+     * @return The dot density associated with this element
+     */
+    public int getDotDensity() {
+        return dotDensity;
+    }
+    
+    /**
+     * This function returns the image x position associated with this element
+     * @return The image x position associated with this element
+     */
+    public int getImageX() {
+        return imageX;
+    }
+    
+    /**
+     * This function returns the image y position associated with this element
+     * @return The image y position associated with this element
+     */
+    public int getImageY() {
+        return imageY;
+    }
+    
+    /**
+     * This function returns the XML tag associated with this element
+     * @return The XML tag associated with this element
+     */
+    public String getXmlTag() {
+        return xmlTag;
     }
 }
