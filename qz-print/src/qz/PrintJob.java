@@ -450,7 +450,7 @@ public class PrintJob extends JLabel implements Printable {
                     JEditorPane rtfData = firstElement.getRtfData();
 
                     // Use Reflection to call getPrintable on a JEditorPane if
-                    // available. Must be compiled with Java >= 1.6
+                    // available. Must be run with Java >= 1.6
                     Class c = rtfData.getClass();
 
                     Class[] paramList = new Class[2];
