@@ -199,46 +199,9 @@ public class PrintJobElement {
      * Getter for the PDDocument object. This object is used for pdf PrintJobElements
      * 
      * @return The processed PDDocument
-     * @throws PrinterException
      */
     public PDDocument getPDFFile() {
-        
         return pdfFile;
-        
-        /*
-        if (pdfFile != null) {
-            return pdfFile;
-        }
-        else {
-            // Need to double escape slashes before feeding to PDDocument.load
-            final String fileName = pdfFileName.replaceAll("\\", "\\\\");
-            LogIt.log("FILENAME: " + fileName);
-            pdfFile = AccessController.doPrivileged(new PrivilegedAction<PDDocument>() {
-                private PDDocument doc;
-                public PDDocument run() {
-                    
-                    try{
-                        doc = new PDDocument();
-                        doc = PDDocument.load(fileName);
-                        
-                    } catch (IOException ex) {
-                        LogIt.log("Error reading PDF file. " + ex);
-                        return null;
-                    } finally {
-                        try {
-                            doc.close();
-                        } catch (IOException ex) {
-                            LogIt.log("Error closing PDF file. " + ex);
-                        }
-                        return doc;
-                    }
-                    
-                    
-                }
-            });
-            return pdfFile;
-        }
-        */
     }
     
     /**
