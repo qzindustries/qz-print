@@ -21,25 +21,12 @@
  */
 package qz;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.awt.print.PrinterException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.nio.charset.Charset;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.logging.Level;
-import javax.imageio.ImageIO;
 import javax.swing.JEditorPane;
-import javax.xml.parsers.ParserConfigurationException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageable;
-import org.w3c.dom.DOMException;
-import org.xml.sax.SAXException;
 import qz.exception.InvalidRawImageException;
 import qz.exception.NullCommandException;
 
@@ -50,11 +37,12 @@ import qz.exception.NullCommandException;
  */
 public class PrintJobElement {
     
+    private final PrintJobElementType type;
+    private final PrintJob pj;
+    private final ByteArrayBuilder data;
+
     private int sequence;
     private boolean prepared;
-    private PrintJobElementType type;
-    private PrintJob pj;
-    private ByteArrayBuilder data;
     private ByteArrayBuilder preparedData;
     private final Charset charset;
     private int imageX = 0;

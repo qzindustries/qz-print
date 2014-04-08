@@ -25,14 +25,12 @@ import java.applet.Applet;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.print.PrintException;
 import javax.print.PrintService;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
-import jssc.SerialPortList;
 import jssc.SerialPortTimeoutException;
 
 /**

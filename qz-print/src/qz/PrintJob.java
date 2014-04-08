@@ -41,7 +41,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.print.PrintException;
 import javax.print.attribute.Attribute;
 import javax.print.attribute.HashPrintRequestAttributeSet;
