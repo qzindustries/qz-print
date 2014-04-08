@@ -56,12 +56,12 @@ public class PrintJobElementPreparer implements Runnable{
     private final int imageY;
     private final String xmlTag;
     private final PrintJobElement pje;
-    private final JEditorPane rtfEditor = new JEditorPane();
     
     private String pdfFileName;
     private ByteArrayBuilder preparedData;
     private BufferedImage bufferedImage;
     private PDDocument pdfFile;
+    private JEditorPane rtfEditor;
     
     PrintJobElementPreparer(PrintJobElementType type, ByteArrayBuilder data, Charset charset, LanguageType lang, int dotDensity, int imageX, int imageY, String xmlTag, PrintJobElement pje) {
         this.type = type;
@@ -167,6 +167,7 @@ public class PrintJobElementPreparer implements Runnable{
             try {
                 String file = new String(data.getByteArray(), charset.name());
                 preparedData = new ByteArrayBuilder(FileUtilities.readRawFile(file));
+                rtfEditor = new JEditorPane();
                 rtfEditor.setBackground(Color.white);
                 rtfEditor.setVisible(false);
                 rtfEditor.setContentType("text/rtf");

@@ -66,7 +66,7 @@ public class PrintJobElement {
     private PDDocument pdfFile;
     private PDPageable pdfPages;
     private String pdfFileName;
-    private JEditorPane rtfEditor = new JEditorPane();
+    private JEditorPane rtfEditor;
     
     PrintJobElement(PrintJob pj, ByteArrayBuilder data, PrintJobElementType type, Charset charset, String lang, int dotDensity) {
         
