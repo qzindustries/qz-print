@@ -77,6 +77,7 @@ public class PrintSpooler implements Runnable {
     private PrintService defaultPS;
     private boolean serialEnabled = false;
     private BrowserTools btools;
+    private Boolean defaultPrinterOnly = false;
 
     /**
      * The run loop will consistently check the spool List and call functions
@@ -86,11 +87,6 @@ public class PrintSpooler implements Runnable {
 
         btools = new BrowserTools(applet);
         LogIt.log("PrintSpooler started");
-
-        // This list will be generated on-the-fly instead
-        //printerListString = "";
-        // Assigning it allows it to be used as a readiness check (i.e. != null)
-        printerList = findAllPrinters();
 
         // Initialize system variables
         running = true;
@@ -104,6 +100,11 @@ public class PrintSpooler implements Runnable {
         currentPrinter = null;
         defaultPS = PrintServiceLookup.lookupDefaultPrintService();
 
+        // This list will be generated on-the-fly instead
+        //printerListString = "";
+        // Assigning it allows it to be used as a readiness check (i.e. != null)
+        printerList = findAllPrinters();
+        
         // Set the loop delay for the spooler
         int loopDelay = 100;
         
@@ -526,23 +527,18 @@ public class PrintSpooler implements Runnable {
         ArrayList<Printer> printers = new ArrayList<Printer>();
         PrintService[] psList;
 
-        psList = PrintServiceLookup.lookupPrintServices(null, null);
+        if(defaultPrinterOnly) {
+            psList = new PrintService[1];
+            psList[0] = defaultPS;
+        }
+        else {
+            psList = PrintServiceLookup.lookupPrintServices(null, null);
+        }
         for (PrintService ps : psList) {
             PrintServiceAttributeSet psa = ps.getAttributes();
 
-            //if(!"".equals(printerListString)) {
-            //    printerListString += ",";
-            //}
-            //String printerName = psa.get(PrinterName.class).toString();
-            //printerListString += printerName;
             Printer printer;
-
-            //if (ps.isDocFlavorSupported(DocFlavor.INPUT_STREAM.POSTSCRIPT)) {
-            //    printer = (PSPrinter) new PSPrinter();
-            //} else {
-                printer = (RawPrinter) new RawPrinter();
-            //}
-
+            printer = (RawPrinter) new RawPrinter();
             printer.setPrintService(ps);
             printer.setName(((PrinterName)ps.getAttribute(PrinterName.class)).getValue());
             printers.add(printer);
@@ -1057,4 +1053,14 @@ public class PrintSpooler implements Runnable {
         return exception;
     }
 
+    /** 
+     * Set the defaultPrinterOnly behavior (grab the default printer and ignore
+     * the rest of the printers)
+     * @param defaultPrinterOnlyString
+     */
+    public void setDefaultPrinterOnly(String defaultPrinterOnlyString) {
+        if("true".equals(defaultPrinterOnlyString)) {
+            this.defaultPrinterOnly = true;
+        }
+    }
 }

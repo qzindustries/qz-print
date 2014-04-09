@@ -62,6 +62,12 @@ public class PrintApplet extends Applet {
         spooler = new PrintSpooler();
         spooler.setApplet(this);
         
+        String defaultPrinterOnlyString = getParameter("default_printer_only");
+        if(defaultPrinterOnlyString != null) {
+            LogIt.log("Set defaultPrinterOnly to " + defaultPrinterOnlyString);
+            spooler.setDefaultPrinterOnly(defaultPrinterOnlyString);
+        }
+        
         new Thread(spooler).start();
         
         charset = Charset.defaultCharset();
