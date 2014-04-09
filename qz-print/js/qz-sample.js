@@ -16,7 +16,7 @@ function deployQZ() {
 		archive:'qz-print.jar', width:1, height:1};
 	var parameters = {jnlp_href: 'qz-print_jnlp.jnlp', 
 		cache_option:'plugin', disable_logging:'false', 
-		initial_focus:'false', default_printer_only:'true'};
+		initial_focus:'false', default_printer_only:'false'};
 	if (deployJava.versionCheck("1.7+") == true) {}
 	else if (deployJava.versionCheck("1.6+") == true) {
 		attributes['archive'] = 'jre6/qz-print.jar';
