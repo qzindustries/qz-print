@@ -25,7 +25,7 @@
 */
 $(document).ready(function() {
 	// Set up the tab elements
-	$('#tabs').tabs();
+	$('#tabs').tabs({ activate:function(event){alert(event.target.id);}});
 	
 	$('#label_print_button').button();
 	$('#printer_select').menu(
@@ -111,7 +111,7 @@ $(document).ready(function() {
 	* Shows/Hides the advanced options
 	*/	
 	function showAdvancedOptions(caller) {
-		// Get the radio selector that applies to this checkbox
+		// Get the radio selector that applies to this check box
 		var radioName = $(caller).attr('id').replace('advanced', 'format');
 		
 		// Grab the checked item
@@ -119,16 +119,30 @@ $(document).ready(function() {
 		
 		// Prepare a warning message
 		var alertMessage = "Sorry, " + $(caller).attr('id') + ".click() event for " + radioName + " Not implemented!";
-		
-		// Show/Hide the appropriate Advanced Dialogue
-		if (typeof radio === 'undefined') {
-			alert(alertMessage);
-		} else if (radio.indexOf('-RAW') !== -1) {
-			$('#raw_options').toggle();
-		} else if (radio.indexOf('-PS') !== -1) {
-			$('#postscript_options').toggle();
+
+		if (radio.indexOf('ESCP') != -1) {
+			$('input:radio').filter('[name="raw_advanced_print_density"]').removeAttr('disabled');
 		} else {
-		    alert(alertMessage);
+			$('input:radio').filter('[name="raw_advanced_print_density"]').attr('disabled', 'disabled');
+		}
+		
+	
+		if ($(caller).is(":checked")) {
+			// Show/Hide the appropriate Advanced Dialogue
+			if (typeof radio === 'undefined') {
+				alert(alertMessage);
+			} else if (radio.indexOf('-RAW') !== -1) {
+				$('#raw_options').show();
+				$('#postscript_options').hide();
+			} else if (radio.indexOf('-PS') !== -1) {
+				$('#raw_options').hide();
+				$('#postscript_options').show();
+			} else {
+				alert(alertMessage);
+			}
+		} else {
+			$('#raw_options').hide();
+			$('#postscript_options').hide();
 		}
 	}
 	
@@ -144,22 +158,13 @@ $(document).ready(function() {
 		var advancedName = $(this).attr('name').replace('format', 'advanced');
 		var advanced = $('#' + advancedName);
 		
-		if (advanced.is(":checked")) {
+		//if (advanced.is(":checked")) {
 			advanced.click();
 			advanced.click();
-		}
-	});
-	
-	
-	/**
-	* Unchecks Advanced Printing Options and hides the advanced options when clicking on a tab
-	* NOT FINISHED
-	*/
-	$("#tabs").on('tabsactivate', function(event, ui) {
-		//$('#label_print_advanced').attr('checked', false)
-		$('#EPL_raw_options').hide();
-		$('#postscript_options').hide();
-		$('#label_print_button').hide();
+		//}
+		//if (!advanced.is(":checked")) {
+		//	advanced.hide();
+		//}
 	});
 	
 	
