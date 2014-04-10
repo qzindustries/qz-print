@@ -111,7 +111,7 @@ $(document).ready(function() {
 	* Shows/Hides the advanced options
 	*/	
 	function showAdvancedOptions(caller) {
-		// Get the radio selector that applies to this check box
+		// Get the radio selector that applies to this checkbox
 		var radioName = $(caller).attr('id').replace('advanced', 'format');
 		
 		// Grab the checked item
@@ -119,16 +119,13 @@ $(document).ready(function() {
 		
 		// Prepare a warning message
 		var alertMessage = "Sorry, " + $(caller).attr('id') + ".click() event for " + radioName + " Not implemented!";
-
-		if (radio.indexOf('ESCP') != -1) {
+	if (radio.indexOf('ESCP') != -1) {
 			$('input:radio').filter('[name="raw_advanced_print_density"]').removeAttr('disabled');
 		} else {
 			$('input:radio').filter('[name="raw_advanced_print_density"]').attr('disabled', 'disabled');
 		}
 		
-<<<<<<< HEAD
-	
-		if ($(caller).is(":checked")) {
+if ($(caller).is(":checked")) {
 			// Show/Hide the appropriate Advanced Dialogue
 			if (typeof radio === 'undefined') {
 				alert(alertMessage);
@@ -141,7 +138,6 @@ $(document).ready(function() {
 			} else {
 				alert(alertMessage);
 			}
-=======
 		// Show/Hide the appropriate Advanced Dialogue
 		if (typeof radio === 'undefined') {
 			alert(alertMessage);
@@ -149,9 +145,8 @@ $(document).ready(function() {
 		
 		} else if (radio.indexOf('-PS') !== -1) {
 			
->>>>>>> b2e172d0f09e5656d093c114abd828ce444a5ae1
 		} else {
-			$('#raw_options').hide();
+		   	$('#raw_options').hide();
 			$('#postscript_options').hide();
 		}
 	}
@@ -170,15 +165,11 @@ $(document).ready(function() {
 		//if (advanced.is(":checked")) {
 			advanced.click();
 			advanced.click();
-<<<<<<< HEAD
 		//}
 		//if (!advanced.is(":checked")) {
 		//	advanced.hide();
 		//}
 	});
-	
-	
-=======
 			var showOrHide = ($(this).val().split('-')[1] == 'RAW') ? true:false;
 			$('#raw_options').toggle(showOrHide);
 			var showOrHide = ($(this).val().split('-')[1] == 'PS') ? true:false;
@@ -186,7 +177,6 @@ $(document).ready(function() {
 		}
 	});
 		
->>>>>>> b2e172d0f09e5656d093c114abd828ce444a5ae1
 	/**
 	* Show advanced options depending on which radio button is selected.
 	*/
