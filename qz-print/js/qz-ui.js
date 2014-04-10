@@ -126,6 +126,7 @@ $(document).ready(function() {
 			$('input:radio').filter('[name="raw_advanced_print_density"]').attr('disabled', 'disabled');
 		}
 		
+<<<<<<< HEAD
 	
 		if ($(caller).is(":checked")) {
 			// Show/Hide the appropriate Advanced Dialogue
@@ -140,6 +141,15 @@ $(document).ready(function() {
 			} else {
 				alert(alertMessage);
 			}
+=======
+		// Show/Hide the appropriate Advanced Dialogue
+		if (typeof radio === 'undefined') {
+			alert(alertMessage);
+		} else if (radio.indexOf('-RAW') !== -1) {
+		
+		} else if (radio.indexOf('-PS') !== -1) {
+			
+>>>>>>> b2e172d0f09e5656d093c114abd828ce444a5ae1
 		} else {
 			$('#raw_options').hide();
 			$('#postscript_options').hide();
@@ -153,7 +163,6 @@ $(document).ready(function() {
 	
 	// Add listener, but only for radio items names ending in  "_print_format"
 	$('input:radio').filter('[name$=_print_format]').on('change', function(){
-	var val = $(this).val();
 		// Get the appropriate advanced checkbox id for this tab
 		var advancedName = $(this).attr('name').replace('format', 'advanced');
 		var advanced = $('#' + advancedName);
@@ -161,6 +170,7 @@ $(document).ready(function() {
 		//if (advanced.is(":checked")) {
 			advanced.click();
 			advanced.click();
+<<<<<<< HEAD
 		//}
 		//if (!advanced.is(":checked")) {
 		//	advanced.hide();
@@ -168,6 +178,15 @@ $(document).ready(function() {
 	});
 	
 	
+=======
+			var showOrHide = ($(this).val().split('-')[1] == 'RAW') ? true:false;
+			$('#raw_options').toggle(showOrHide);
+			var showOrHide = ($(this).val().split('-')[1] == 'PS') ? true:false;
+			$('#postscript_options').toggle(showOrHide);
+		}
+	});
+		
+>>>>>>> b2e172d0f09e5656d093c114abd828ce444a5ae1
 	/**
 	* Show advanced options depending on which radio button is selected.
 	*/
