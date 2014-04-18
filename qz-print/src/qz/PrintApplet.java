@@ -62,6 +62,12 @@ public class PrintApplet extends Applet {
         spooler = new PrintSpooler();
         spooler.setApplet(this);
         
+        String defaultPrinterOnlyString = getParameter("default_printer_only");
+        if(defaultPrinterOnlyString != null) {
+            LogIt.log("Set defaultPrinterOnly to " + defaultPrinterOnlyString);
+            spooler.setDefaultPrinterOnly(defaultPrinterOnlyString);
+        }
+        
         new Thread(spooler).start();
         
         charset = Charset.defaultCharset();
@@ -658,8 +664,6 @@ public class PrintApplet extends Applet {
      */
     public void findNetworkInfo() {
         spooler.findNetworkInfo();
-        // Deprecated callback. Remove in a future version.
-        btools.notifyBrowser("qzDoneFindingNetwork");
     }
     
     /**
@@ -709,7 +713,6 @@ public class PrintApplet extends Applet {
      */
     public void findPorts() {
         spooler.findPorts();
-        btools.notifyBrowser("qzDoneFindingPorts");
     }
     
     /**

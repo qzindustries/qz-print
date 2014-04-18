@@ -16,7 +16,7 @@ function deployQZ() {
 		archive:'qz-print.jar', width:1, height:1};
 	var parameters = {jnlp_href: 'qz-print_jnlp.jnlp', 
 		cache_option:'plugin', disable_logging:'false', 
-		initial_focus:'false'};
+		initial_focus:'false', default_printer_only:'false'};
 	if (deployJava.versionCheck("1.7+") == true) {}
 	else if (deployJava.versionCheck("1.6+") == true) {
 		attributes['archive'] = 'jre6/qz-print.jar';
@@ -675,12 +675,19 @@ function printHTML(leftMargin, topMargin) {
 ***************************************************************************/ 
 function listNetworkInfo() {
 	if (isLoaded()) {
+		
+		// Gets called when findNetworkInfo() finishes
+		window['qzDoneFindingNetwork'] = function() {
+			alert("Primary adapter found: " + qz.getMac() + ", IP: " + qz.getIP());
+			window['qzDoneFindingNetwork'] = null;
+		}
+	
 		// Makes a quick connection to www.google.com to determine the active interface
 		// Note, if you don't wish to use google.com, you can customize the host and port
 		// qz.getNetworkUtilities().setHostname("qzindustries.com");
 		// qz.getNetworkUtilities().setPort(80);
 		qz.findNetworkInfo();
-		alert("Primary adapter found: " + qz.getMac() + ", IP: " + qz.getIP());
+		
 	}
 }
 

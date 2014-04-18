@@ -21,25 +21,12 @@
  */
 package qz;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.awt.print.PrinterException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.nio.charset.Charset;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.logging.Level;
-import javax.imageio.ImageIO;
 import javax.swing.JEditorPane;
-import javax.xml.parsers.ParserConfigurationException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageable;
-import org.w3c.dom.DOMException;
-import org.xml.sax.SAXException;
 import qz.exception.InvalidRawImageException;
 import qz.exception.NullCommandException;
 
@@ -50,11 +37,12 @@ import qz.exception.NullCommandException;
  */
 public class PrintJobElement {
     
+    private final PrintJobElementType type;
+    private final PrintJob pj;
+    private final ByteArrayBuilder data;
+
     private int sequence;
     private boolean prepared;
-    private PrintJobElementType type;
-    private PrintJob pj;
-    private ByteArrayBuilder data;
     private ByteArrayBuilder preparedData;
     private final Charset charset;
     private int imageX = 0;
@@ -66,7 +54,7 @@ public class PrintJobElement {
     private PDDocument pdfFile;
     private PDPageable pdfPages;
     private String pdfFileName;
-    private JEditorPane rtfEditor = new JEditorPane();
+    private JEditorPane rtfEditor;
     
     PrintJobElement(PrintJob pj, ByteArrayBuilder data, PrintJobElementType type, Charset charset, String lang, int dotDensity) {
         
@@ -127,7 +115,7 @@ public class PrintJobElement {
      * @throws NullCommandException 
      */
     public void prepare() throws IOException, InvalidRawImageException, NullCommandException {
-        PrintJobElementPreparer preparer = new PrintJobElementPreparer(type, data, charset, lang, dotDensity, imageX, imageY, xmlTag, this);
+        PrintJobElementPreparer preparer = new PrintJobElementPreparer(type, data, charset, this);
         Thread preparerThread = new Thread(preparer);
         preparerThread.start();
     }
@@ -199,46 +187,9 @@ public class PrintJobElement {
      * Getter for the PDDocument object. This object is used for pdf PrintJobElements
      * 
      * @return The processed PDDocument
-     * @throws PrinterException
      */
     public PDDocument getPDFFile() {
-        
         return pdfFile;
-        
-        /*
-        if (pdfFile != null) {
-            return pdfFile;
-        }
-        else {
-            // Need to double escape slashes before feeding to PDDocument.load
-            final String fileName = pdfFileName.replaceAll("\\", "\\\\");
-            LogIt.log("FILENAME: " + fileName);
-            pdfFile = AccessController.doPrivileged(new PrivilegedAction<PDDocument>() {
-                private PDDocument doc;
-                public PDDocument run() {
-                    
-                    try{
-                        doc = new PDDocument();
-                        doc = PDDocument.load(fileName);
-                        
-                    } catch (IOException ex) {
-                        LogIt.log("Error reading PDF file. " + ex);
-                        return null;
-                    } finally {
-                        try {
-                            doc.close();
-                        } catch (IOException ex) {
-                            LogIt.log("Error closing PDF file. " + ex);
-                        }
-                        return doc;
-                    }
-                    
-                    
-                }
-            });
-            return pdfFile;
-        }
-        */
     }
     
     /**
@@ -288,5 +239,45 @@ public class PrintJobElement {
      */
     public int getRtfWidth() {
         return rtfEditor.getWidth();
+    }
+    
+    /**
+     * This function returns the LanguageType associated with this element
+     * @return The LanguageType associated with this element
+     */
+    public LanguageType getLang() {
+        return lang;
+    }
+    
+    /**
+     * This function returns the dot density associated with this element
+     * @return The dot density associated with this element
+     */
+    public int getDotDensity() {
+        return dotDensity;
+    }
+    
+    /**
+     * This function returns the image x position associated with this element
+     * @return The image x position associated with this element
+     */
+    public int getImageX() {
+        return imageX;
+    }
+    
+    /**
+     * This function returns the image y position associated with this element
+     * @return The image y position associated with this element
+     */
+    public int getImageY() {
+        return imageY;
+    }
+    
+    /**
+     * This function returns the XML tag associated with this element
+     * @return The XML tag associated with this element
+     */
+    public String getXmlTag() {
+        return xmlTag;
     }
 }

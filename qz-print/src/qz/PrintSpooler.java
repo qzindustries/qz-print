@@ -27,19 +27,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.PrinterName;
 import qz.exception.InvalidFileTypeException;
-import qz.exception.InvalidRawImageException;
 import qz.exception.NullCommandException;
 import qz.exception.NullPrintServiceException;
 import qz.json.JSONArray;
@@ -81,6 +77,7 @@ public class PrintSpooler implements Runnable {
     private PrintService defaultPS;
     private boolean serialEnabled = false;
     private BrowserTools btools;
+    private Boolean defaultPrinterOnly = false;
 
     /**
      * The run loop will consistently check the spool List and call functions
@@ -90,11 +87,6 @@ public class PrintSpooler implements Runnable {
 
         btools = new BrowserTools(applet);
         LogIt.log("PrintSpooler started");
-
-        // This list will be generated on-the-fly instead
-        //printerListString = "";
-        // Assigning it allows it to be used as a readiness check (i.e. != null)
-        printerList = findAllPrinters();
 
         // Initialize system variables
         running = true;
@@ -108,6 +100,11 @@ public class PrintSpooler implements Runnable {
         currentPrinter = null;
         defaultPS = PrintServiceLookup.lookupDefaultPrintService();
 
+        // This list will be generated on-the-fly instead
+        //printerListString = "";
+        // Assigning it allows it to be used as a readiness check (i.e. != null)
+        printerList = findAllPrinters();
+        
         // Set the loop delay for the spooler
         int loopDelay = 100;
         
@@ -530,23 +527,18 @@ public class PrintSpooler implements Runnable {
         ArrayList<Printer> printers = new ArrayList<Printer>();
         PrintService[] psList;
 
-        psList = PrintServiceLookup.lookupPrintServices(null, null);
+        if(defaultPrinterOnly) {
+            psList = new PrintService[1];
+            psList[0] = defaultPS;
+        }
+        else {
+            psList = PrintServiceLookup.lookupPrintServices(null, null);
+        }
         for (PrintService ps : psList) {
             PrintServiceAttributeSet psa = ps.getAttributes();
 
-            //if(!"".equals(printerListString)) {
-            //    printerListString += ",";
-            //}
-            //String printerName = psa.get(PrinterName.class).toString();
-            //printerListString += printerName;
             Printer printer;
-
-            //if (ps.isDocFlavorSupported(DocFlavor.INPUT_STREAM.POSTSCRIPT)) {
-            //    printer = (PSPrinter) new PSPrinter();
-            //} else {
-                printer = (RawPrinter) new RawPrinter();
-            //}
-
+            printer = (RawPrinter) new RawPrinter();
             printer.setPrintService(ps);
             printer.setName(((PrinterName)ps.getAttribute(PrinterName.class)).getValue());
             printers.add(printer);
@@ -834,7 +826,7 @@ public class PrintSpooler implements Runnable {
 
         if (networkUtilities == null) {
             try {
-                networkUtilities = new NetworkUtilities();
+                networkUtilities = new NetworkUtilities(this);
             } catch (SocketException ex) {
                 LogIt.log(Level.SEVERE, "Socket error.", ex);
             } catch (ReflectException ex) {
@@ -843,26 +835,16 @@ public class PrintSpooler implements Runnable {
                 LogIt.log(Level.SEVERE, "Unknown host.", ex);
             }
         }
+        networkUtilities.gatherNetworkInfo();
+    }
 
-        AccessController.doPrivileged(new PrivilegedAction<Object>() {
-            public Object run() {
-                try {
-                    networkUtilities.gatherNetworkInfo();
-                } catch (IOException ex) {
-                    LogIt.log(Level.SEVERE, "Could not gather network info.", ex);
-                } catch (ReflectException ex) {
-                    LogIt.log(Level.SEVERE, "Reflection error.", ex);
-                }
-                return null;
-            }
-        });
-
+    public void doneFindingNetworkInfo() {
         macAddress = networkUtilities.getHardwareAddress();
         ipAddress = networkUtilities.getInetAddress();
         LogIt.log("Found Network Adapter. MAC: " + macAddress + " IP: " + ipAddress);
-
+        btools.notifyBrowser("qzDoneFindingNetwork");
     }
-
+    
     /**
      * Getter for Mac Address
      *
@@ -1071,4 +1053,14 @@ public class PrintSpooler implements Runnable {
         return exception;
     }
 
+    /** 
+     * Set the defaultPrinterOnly behavior (grab the default printer and ignore
+     * the rest of the printers)
+     * @param defaultPrinterOnlyString
+     */
+    public void setDefaultPrinterOnly(String defaultPrinterOnlyString) {
+        if("true".equals(defaultPrinterOnlyString)) {
+            this.defaultPrinterOnly = true;
+        }
+    }
 }

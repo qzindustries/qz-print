@@ -50,28 +50,18 @@ public class PrintJobElementPreparer implements Runnable{
     private final PrintJobElementType type;
     private final ByteArrayBuilder data;
     private final Charset charset;
-    private final LanguageType lang;
-    private final int dotDensity;
-    private final int imageX;
-    private final int imageY;
-    private final String xmlTag;
     private final PrintJobElement pje;
-    private final JEditorPane rtfEditor = new JEditorPane();
     
     private String pdfFileName;
     private ByteArrayBuilder preparedData;
     private BufferedImage bufferedImage;
     private PDDocument pdfFile;
+    private JEditorPane rtfEditor;
     
-    PrintJobElementPreparer(PrintJobElementType type, ByteArrayBuilder data, Charset charset, LanguageType lang, int dotDensity, int imageX, int imageY, String xmlTag, PrintJobElement pje) {
+    PrintJobElementPreparer(PrintJobElementType type, ByteArrayBuilder data, Charset charset, PrintJobElement pje) {
         this.type = type;
         this.data = data;
         this.charset = charset;
-        this.lang = lang;
-        this.dotDensity = dotDensity;
-        this.imageX = imageX;
-        this.imageY = imageY;
-        this.xmlTag = xmlTag;
         this.pje = pje;
     }
     
@@ -94,13 +84,14 @@ public class PrintJobElementPreparer implements Runnable{
                 } else {
                     bi = ImageIO.read(new URL(file));
                 }
+                LanguageType lang = pje.getLang();
                 iw = new ImageWrapper(bi, lang);
                 iw.setCharset(charset);
                 // Image density setting (ESCP only)
-                iw.setDotDensity(dotDensity);
+                iw.setDotDensity(pje.getDotDensity());
                 // Image coordinates, (EPL only)
-                iw.setxPos(imageX);
-                iw.setyPos(imageY);
+                iw.setxPos(pje.getImageX());
+                iw.setyPos(pje.getImageY());
                 
                 this.preparedData = new ByteArrayBuilder(iw.getImageCommand());
                 
@@ -135,7 +126,7 @@ public class PrintJobElementPreparer implements Runnable{
                 String dataString;
                 byte[] dataByteArray;
                 
-                dataString = FileUtilities.readXMLFile(file, xmlTag);
+                dataString = FileUtilities.readXMLFile(file, pje.getXmlTag());
                 dataByteArray = Base64.decode(dataString);
                 preparedData = new ByteArrayBuilder(dataByteArray);
                 
@@ -167,6 +158,7 @@ public class PrintJobElementPreparer implements Runnable{
             try {
                 String file = new String(data.getByteArray(), charset.name());
                 preparedData = new ByteArrayBuilder(FileUtilities.readRawFile(file));
+                rtfEditor = new JEditorPane();
                 rtfEditor.setBackground(Color.white);
                 rtfEditor.setVisible(false);
                 rtfEditor.setContentType("text/rtf");

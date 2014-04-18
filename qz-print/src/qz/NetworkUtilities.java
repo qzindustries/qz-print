@@ -21,15 +21,8 @@
  */
 package qz;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.NetworkInterface;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import qz.reflection.Reflect;
 import qz.reflection.ReflectException;
 
 /**
@@ -42,8 +35,10 @@ public class NetworkUtilities {
     private String macAddress;
     private String hostname = "www.google.com";
     private int port = 80;
+    PrintSpooler spooler;
 
-    public NetworkUtilities() throws SocketException, ReflectException, UnknownHostException {
+    public NetworkUtilities(PrintSpooler spooler) throws SocketException, ReflectException, UnknownHostException {
+        this.spooler = spooler;
     }
     
     public void setHostname(String hostname) {
@@ -54,36 +49,19 @@ public class NetworkUtilities {
         this.port = port;
     }
 
-    public void gatherNetworkInfo() throws IOException, SocketException, UnknownHostException, ReflectException {
-        Socket socket = new Socket();
+    public void gatherNetworkInfo() {
         LogIt.log("Initiating a temporary connection to \"" + hostname + ":" + 
                 port + "\" to determine main Network Interface");
-        SocketAddress endpoint = new InetSocketAddress(hostname, port);
-        socket.connect(endpoint);
-        InetAddress localAddress = socket.getLocalAddress();
-        this.ipAddress = localAddress.getHostAddress();
-        socket.close();
-        System.out.println(localAddress.getHostAddress());
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(localAddress);
-        Reflect r = Reflect.on(networkInterface);
-        byte[] b = (byte[]) r.call("getHardwareAddress").get();
-        if (b != null && b.length > 0) {
-            this.macAddress = ByteUtilities.bytesToHex(b);
-        }
+        
+        NetworkInfoFinder finder = new NetworkInfoFinder(this, hostname, port);
+        Thread finderThread = new Thread(finder);
+        finderThread.start();
+        
     }
-
-    /*public void gatherNetworkInfo() throws SocketException, UnknownHostException, ReflectException {
-        InetAddress inetAddress = InetAddress.getLocalHost();
-        this.ipAddress = inetAddress.getHostAddress();
-
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(inetAddress);
-
-        Reflect r = Reflect.on(networkInterface);
-        byte[] b = (byte[]) r.call("getHardwareAddress").get();
-        if (b != null && b.length > 0) {
-            this.macAddress = ByteUtilities.bytesToHex(b);
-        }
-    }*/
+    
+    public void doneFindingNetworkInfo() {
+        spooler.doneFindingNetworkInfo();
+    }
 
     public String getHardwareAddress() {
         return this.macAddress;
@@ -91,5 +69,13 @@ public class NetworkUtilities {
 
     public String getInetAddress() {
         return this.ipAddress;
+    }
+    
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+    
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
     }
 }

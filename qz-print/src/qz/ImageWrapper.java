@@ -407,7 +407,7 @@ public class ImageWrapper {
      * example, if you resize the image), it must be initialized again prior to
      * calling getImageCommand()
      */
-    private final void init() {
+    private void init() {
         LogIt.log("Initializing Image Fields");
         generateBlackPixels();
         generateIntArray();

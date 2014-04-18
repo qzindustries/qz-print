@@ -142,8 +142,7 @@ public class PaperFormat {
      * image dimensions 
      * @param imageWidth
      * @param imageHeight
-     * @param p
-     * @return 
+     * @param p 
      */
     public static void setAutoSize(int imageWidth, int imageHeight, PaperFormat p) {
         // swap image dimensions
