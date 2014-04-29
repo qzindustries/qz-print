@@ -119,35 +119,37 @@ $(document).ready(function() {
 		
 		// Prepare a warning message
 		var alertMessage = "Sorry, " + $(caller).attr('id') + ".click() event for " + radioName + " Not implemented!";
-	if (radio.indexOf('ESCP') != -1) {
+		
+		if (radio.indexOf('ESCP') != -1) {
 			$('input:radio').filter('[name="raw_advanced_print_density"]').removeAttr('disabled');
 		} else {
 			$('input:radio').filter('[name="raw_advanced_print_density"]').attr('disabled', 'disabled');
 		}
 		
-if ($(caller).is(":checked")) {
+		if ($(caller).is(":checked")) {
+				// Show/Hide the appropriate Advanced Dialogue
+				if (typeof radio === 'undefined') {
+					alert(alertMessage);
+				} else if (radio.indexOf('-RAW') !== -1) {
+					$('#raw_options').show();
+					$('#postscript_options').hide();
+				} else if (radio.indexOf('-PS') !== -1) {
+					$('#raw_options').hide();
+					$('#postscript_options').show();
+				} else {
+					alert(alertMessage);
+				}
 			// Show/Hide the appropriate Advanced Dialogue
 			if (typeof radio === 'undefined') {
 				alert(alertMessage);
 			} else if (radio.indexOf('-RAW') !== -1) {
-				$('#raw_options').show();
-				$('#postscript_options').hide();
-			} else if (radio.indexOf('-PS') !== -1) {
-				$('#raw_options').hide();
-				$('#postscript_options').show();
-			} else {
-				alert(alertMessage);
-			}
-		// Show/Hide the appropriate Advanced Dialogue
-		if (typeof radio === 'undefined') {
-			alert(alertMessage);
-		} else if (radio.indexOf('-RAW') !== -1) {
-		
-		} else if (radio.indexOf('-PS') !== -1) {
 			
-		} else {
-		   	$('#raw_options').hide();
-			$('#postscript_options').hide();
+			} else if (radio.indexOf('-PS') !== -1) {
+				
+			} else {
+				$('#raw_options').hide();
+				$('#postscript_options').hide();
+			}
 		}
 	}
 	
@@ -174,8 +176,8 @@ if ($(caller).is(":checked")) {
 			$('#raw_options').toggle(showOrHide);
 			var showOrHide = ($(this).val().split('-')[1] == 'PS') ? true:false;
 			$('#postscript_options').toggle(showOrHide);
-		}
-	});
+	//	}
+	//});
 		
 	/**
 	* Show advanced options depending on which radio button is selected.
