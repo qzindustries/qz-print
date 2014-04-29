@@ -2,13 +2,13 @@
 <html>
 <head>
 	<title>QZ Print Plugin</title>
-	
 	<script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.js"></script>
 	<script type="text/javascript" src="js/html2canvas.js"></script>
 	<script type="text/javascript" src="js/jquery-html2canvas.js"></script>
 	<script type="text/javascript" src="js/qz-ui.js"></script>
-	
+	<!-- <script type="text/javascript" src="js/qz-sample.js"></script> -->
+	<script type="text/javascript" src="js/raw_samples/epl.js"></script>
 	<link href="css/jquery-ui.css" rel="stylesheet" />
 	<link href="css/qz-ui.css" rel="stylesheet" />
 	
@@ -40,47 +40,90 @@
 			
 			<div id="tabs-label">
 				<label for="label_print_format">Print Format:</label><br />
-				<input type="radio" name="label_print_format" value="EPL" checked="checked">EPL (Raw)</input><br />
-				<input type="radio" name="label_print_format" value="ZPL">ZPL (Raw)</input><br />
-				<input type="radio" name="label_print_format" value="HTML5">HTML5 (PostScript)</input><br />
-				<input type="radio" name="label_print_format" value="IMAGE">Image (png, jpg, etc) (PostScript)</input><br /><br />
-				<a href="#" class="ui-button" id="label_print_button">Print Label</a>
+				<input type="radio" name="label_print_format" value="EPL-RAW" checked="checked">EPL (Raw)</input><br />
+				<input type="radio" name="label_print_format" value="ZPL-RAW">ZPL (Raw)</input><br />
+				<input type="radio" name="label_print_format" value="HTML5-PS">HTML5 (PostScript)</input><br />
+				<input type="radio" name="label_print_format" value="IMAGE-PS">Image (png, jpg, etc) (PostScript)</input><br /><br />
+				<input id="label_print_advanced" type="checkbox">Advanced Printing Options</input><br /><br/>
+				<a href="#" class="ui-button" id="label_print_button">Print Label</a>				
 			</div>
 			
 			<div id="tabs-receipt">
-				TAB RECEIPT
+				<label for="receipt_print_format">Print Format:</label><br />
+				<input type="radio" name="receipt_print_format" value="ESCP-RAW" checked="checked">ESCP (Raw)</input><br />
+				<input type="radio" name="receipt_print_format" value="HTML5-PS">HTML5 (PostScript)</input><br /><br />
+				<input id="receipt_print_advanced" type="checkbox">Advanced Printing Options</input><br /><br/>
+				<a href="#" class="ui-button" id="receipt_print_button">Print Receipt</a>
 			</div>
 			
 			<div id="tabs-ticket">
-				TAB TICKET
+				<label for="ticket_print_format">Print Format:</label><br />
+				<input type="radio" name="ticket_print_format" value="PGL-RAW" checked="checked">PGL (Raw)</input><br />
+				<input type="radio" name="ticket_print_format" value="HTML5-PS">HTML5 (PostScript)</input><br />
+				<input type="radio" name="ticket_print_format" value="IMAGE-PS">Image (png, jpg, etc) (PostScript)</input><br /><br />
+				<input id="ticket_print_advanced" type="checkbox">Advanced Printing Options</input><br /><br/>
+				<a href="#" class="ui-button" id="ticket_print_button">Print Receipt</a>
 			</div>
 			
 			<div id="tabs-document">
-				TAB DOCUMENT
+				<label for="document_print_format">Print Format:</label><br />
+				<input type="radio" name="document_print_size" value="A4">A4</input><br />
+				<input type="radio" name="document_print_size" value="8.5x11">8.5 x 11</input><br />
+				<hr width="10%" align="left" />
+				<input type="radio" name="document_print_format" value="PDF" checked="checked">PDF (Raw)</input><br />
+				<input type="radio" name="document_print_format" value="HTML5-PS">HTML5 (PostScript)</input><br />
+				<input type="radio" name="document_print_format" value="RTF-PS">RTF (PostScript)</input><br />
+				<input type="radio" name="document_print_format" value="IMAGE-PS">Image (png, jpg, etc) (PostScript)</input><br /><br />
+				<input id="document_print_advanced" type="checkbox">Advanced Printing Options</input><br /><br/>
+				<a href="#" class="ui-button" id="document_print_button">Print Receipt</a>
 			</div>
 			
 			<div id="tabs-serial">
-				TAB SERIAL
+				<a href="#" class="ui-button" id="list_serial_ports_button">List Serial Ports</a><br/>
+				<a href="#" class="ui-button" id="open_port_button">Open Port</a>
+				<input type="text" id="port_name" size="8"><br/>
+				<a href="#" class="ui-button" id="send_data_button">Send Port Cmd</a><br/>
+				<a href="#" class="ui-button" id="close_port_button">Close Port</a><br/><br/>
 			</div>
 			
 			<div id="tabs-network">
-				TAB NETWORK
+				<a href="#" class="ui-button" id="list_network_info_button">List Network Info</a><br/><br/>
 			</div>
 			
 			<div id="tabs-misc">
 				TAB MISC
 			</div>
 			
-		</div>
 		
+			<div id="raw_options">
+				<label for="raw_advanced_print_format">Advanced Printing Options:</label><br />
+				<input type="radio" name="raw_advanced_print_format" value="HexEPL-RAW">Print Hex</input><br />
+				<input type="radio" name="raw_advanced_print_format" value="XMLEPL-RAW">Print XML</input><br />
+				<input type="radio" name="raw_advanced_print_format" value="64EPL-RAW">Print Base64</input><br />
+				<input type="radio" name="raw_advanced_print_format" value="FileEPL-RAW">Print File</input><br />
+				<input type="radio" name="raw_advanced_print_format" value="ToFileEPL-RAW">Print To File</input><br />
+				<input type="radio" name="raw_advanced_print_format" value="PagesEPL-RAW">Print Spooling Every 2</input><br /><br />
+				<label for="raw_advanced_print_density">Image Density:</label><br />
+				<input type ="radio" name="raw_advanced_print_density" value="single" disabled="disabled">Single(33)</input>
+				<input type ="radio" name="raw_advanced_print_density" value="double" disabled="disabled">Double(34)</input><br />
+				<br/><a href="#" class="ui-button" id="raw_advanced_print_button">Print</a>		
+			</div>
+			<div id="postscript_options">
+				<label for="postscript_advanced_option">Postscript Advanced Options</label><br />
+				<input type="radio" name="postscript_advanced_option" value="base64">Print Base64</input><br />
+				<input type="radio" name="postscript_advanced_option" value="spoolever2">Print Spooling Every 2</input><br />
+				<input type="radio" name="postscript_advanced_option" value="printxml">Print XML</input><br />
+				<input type="radio" name="postscript_advanced_option" value="printhex">Print Hex</input><br />
+				<br/><a href="#" class="ui-button" id="ps_advanced_print_button">Print</a>
+			</div>
+		
+		</div>
+			
 		<div id="queue"></div>
 		
 	</div>
-	
-	
-	
-<canvas id="hidden_screenshot" style="display:none;"></canvas>
-<script type="text/javascript" src="js/deployJava.js"></script>
-<script type="text/javascript" src="js/qz-core.js"></script>
+	<canvas id="hidden_screenshot" style="display:none;"></canvas>
+	<script type="text/javascript" src="js/deployJava.js"></script>
+	<script type="text/javascript" src="js/qz-core.js"></script>
 </body>
 </html>

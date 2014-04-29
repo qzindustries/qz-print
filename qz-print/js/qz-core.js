@@ -164,3 +164,11 @@ function qzAlert(msg, type) {
 	else { console.log(msg); }
 	return false;
 }
+
+/***************************************************************************
+* Gets the current url's path, such as http://site.com/example/dist/
+***************************************************************************/
+function getPath() {
+	var path = window.location.href;
+	return path.substring(0, path.lastIndexOf("/")) + "/";
+}

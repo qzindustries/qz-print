@@ -5,7 +5,7 @@
 * Summary: 
 *    A series of JavaScript/jQuery functions for interacting with the "QZ-PRINT"
 *    Applet/Plugin.  This file is a sample only and was created ONLY for
-*    sample.html.  Therfore this file is NOT recommended for redistributing with
+*    sample.html.  Therefore this file is NOT recommended for redistributing with
 *    3rd party software, although you are free to do so per one of the following
 *    licenses:
 * 
@@ -25,13 +25,63 @@
 */
 $(document).ready(function() {
 	// Set up the tab elements
-	$('#tabs').tabs();
+	$('#tabs').tabs({ activate:function(event){alert(event.target.id);}});
 	
 	$('#label_print_button').button();
 	$('#printer_select').menu(
 		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
 	);
 	
+	$('#receipt_print_button').button();
+	$('#printer_select').menu(
+		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
+	);
+	
+	$('#ticket_print_button').button();
+	$('#printer_select').menu(
+		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
+	);
+	
+	$('#document_print_button').button();
+	$('#printer_select').menu(
+		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
+	);
+	
+	$('#list_serial_ports_button').button();
+	$('#printer_select').menu(
+		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
+	);
+	
+	$('#open_port_button').button();
+	$('#printer_select').menu(
+		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
+	);
+	
+	$('#send_data_button').button();
+	$('#printer_select').menu(
+		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
+	);
+	
+	$('#close_port_button').button();
+	$('#printer_select').menu(
+		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
+	);
+	
+	$('#list_network_info_button').button();
+	$('#printer_select').menu(
+		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
+	);
+	
+	$('#raw_advanced_print_button').button();
+	$('#printer_select').menu(
+		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
+	);
+	
+	$('#ps_advanced_print_button').button();
+	$('#printer_select').menu(
+		{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}}
+	);
+		
 	//$('.printer_select').menu('disable');
 	$('#printer_menu').menu(
 		/*{ select: function( event, ui ) {qz.setPrinter(ui.item.children().data('index'));}},*/
@@ -39,6 +89,8 @@ $(document).ready(function() {
 	);
 	
 	$('#queue').addClass("ui-widget-content ui-corner-bottom");
+	$('#EPL_raw_options').addClass("ui-widget-content ui-corner-bottom");
+	$('#postscript_options').addClass("ui-widget-content ui-corner-bottom");
 	
 	// Set the progress bar to 33%, Loading Applet, "QZ-Yellow"
 	$('#progressbar').progressbar({value: 33});
@@ -55,30 +107,195 @@ $(document).ready(function() {
 		$('#printer_select').effect("highlight", {color : "#99EB29"});
 	});
 	
+	/**
+	* Shows/Hides the advanced options
+	*/	
+	function showAdvancedOptions(caller) {
+		// Get the radio selector that applies to this checkbox
+		var radioName = $(caller).attr('id').replace('advanced', 'format');
+		
+		// Grab the checked item
+		var radio = $('input[name=' + radioName + ']:checked').val();
+		
+		// Prepare a warning message
+		var alertMessage = "Sorry, " + $(caller).attr('id') + ".click() event for " + radioName + " Not implemented!";
+		
+		if (radio.indexOf('ESCP') != -1) {
+			$('input:radio').filter('[name="raw_advanced_print_density"]').removeAttr('disabled');
+		} else {
+			$('input:radio').filter('[name="raw_advanced_print_density"]').attr('disabled', 'disabled');
+		}
+		
+		if ($(caller).is(":checked")) {
+				// Show/Hide the appropriate Advanced Dialogue
+				if (typeof radio === 'undefined') {
+					alert(alertMessage);
+				} else if (radio.indexOf('-RAW') !== -1) {
+					$('#raw_options').show();
+					$('#postscript_options').hide();
+				} else if (radio.indexOf('-PS') !== -1) {
+					$('#raw_options').hide();
+					$('#postscript_options').show();
+				} else {
+					alert(alertMessage);
+				}
+			// Show/Hide the appropriate Advanced Dialogue
+			if (typeof radio === 'undefined') {
+				alert(alertMessage);
+			} else if (radio.indexOf('-RAW') !== -1) {
+			
+			} else if (radio.indexOf('-PS') !== -1) {
+				
+			} else {
+				$('#raw_options').hide();
+				$('#postscript_options').hide();
+			}
+		}
+	}
+	
+	/**
+	* Listener to determine when a radio button was changed and show the 
+	* correct advanced printing options
+	*/
+	
+	// Add listener, but only for radio items names ending in  "_print_format"
+	$('input:radio').filter('[name$=_print_format]').on('change', function(){
+		// Get the appropriate advanced checkbox id for this tab
+		var advancedName = $(this).attr('name').replace('format', 'advanced');
+		var advanced = $('#' + advancedName);
+		
+		//if (advanced.is(":checked")) {
+			advanced.click();
+			advanced.click();
+		//}
+		//if (!advanced.is(":checked")) {
+		//	advanced.hide();
+		//}
+	});
+			var showOrHide = ($(this).val().split('-')[1] == 'RAW') ? true:false;
+			$('#raw_options').toggle(showOrHide);
+			var showOrHide = ($(this).val().split('-')[1] == 'PS') ? true:false;
+			$('#postscript_options').toggle(showOrHide);
+	//	}
+	//});
+		
+	/**
+	* Show advanced options depending on which radio button is selected.
+	*/
+	$('#label_print_advanced').click(function(event) { showAdvancedOptions($(this));});
+	$('#receipt_print_advanced').click(function(event) { showAdvancedOptions($(this));});
+	$('#ticket_print_advanced').click(function(event) { showAdvancedOptions($(this));});
+	$('#document_print_advanced').click(function(event) { showAdvancedOptions($(this));});
+	
+	
+	//$('input[name=receipt_print_format]').click(function(event) { showAdvancedOptions($(this));});
+	//$('input[name=ticket_print_format]').click(function(event) { showAdvancedOptions($(this));});
+	//$('input[name=document_print_format]').click(function(event) { showAdvancedOptions($(this));});
+	
+	$('#list_serial_ports_button').click(function(event) {listSerialPorts();});
+	$('#open_port_button').click(function(event) { openSerialPort();});
+	$('#close_port_button').click(function(event) { closeSerialPort();});
+	$('#send_data_button').click(function(event) {sendSerialData();});
+	$('#list_network_info_button').click(function(event) {listNetworkInfo();});
+	
+	
 	
 	/**
 	* Print functions to respond to button presses. Grab the value of the radio select and call the appropriate sample print function.
 	* Sample print functions are defined in qz-sample.js
 	*/
+	$('#label_print_button').click(function(event){print(this,event);});
 	
-	$('#label_print_button').click(function(event) {
+	$('#raw_advanced_print_button').click(function(event){print(this,event);});
+	
+	$('#receipt_print_button').click(function(event) {
 		
-		var format = $('input[name=label_print_format]:checked').val();
+		var format = $('input[name=receipt_print_format]:checked').val();
 		
-		console.log("Print Label! Format: " + format);
+		console.log("Print Receipt! Format: " + format);
 		
 		switch(format) {
-			case 'EPL': 	printEPL(); 	break;
-			case 'ZPL': 	printZPL(); 	break;
-			case 'HTML5': 	printHTML(); 	break;
-			case 'IMAGE': 	printImage(); 	break;
+			case 'ESCP-RAW': 	printESCP(); 	break;
+			case 'HTML5-PS': 	printHTML(); 	break;
 		}
 
 		event.preventDefault();
 		
 	});
 	
+	$('#ticket_print_button').click(function(event) {
+		
+		var format = $('input[name=ticket_print_format]:checked').val();
+		
+		console.log("Print Receipt! Format: " + format);
+		
+		switch(format) {
+			case 'PGL-RAW': 	printPGL(); 	break;
+			case 'HTML5-PS': 	printHTML(); 	break;
+			case 'IMAGE-PS': 	printImage(); 	break;
+		}
+
+		event.preventDefault();
+		
+	});
+	
+	$('#document_print_button').click(function(event) {
+		
+		var format = $('input[name=document_print_format]:checked').val();
+		
+		console.log("Print Receipt! Format: " + format);
+		
+		switch(format) {
+			case 'PDF-RAW': 	printPDF(); 	break;
+			case 'HTML5-PS': 	printHTML(); 	break;
+			case 'RTF-RAW': 	printRTF(); 	break;
+			case 'IMAGE-PS': 	printImage(); 	break;
+		}
+
+		event.preventDefault();
+		
+	});
+	
+	
 });
+
+function print(caller, event) {
+	//alert("print function");
+	//alert("caller id: " + caller.id);
+	// Translate label_print_button to label_print_format
+	var formatName = caller.id.replace('button', 'format');
+	//alert("formatName: " + formatName);
+	var format = $('input[name=' + formatName + ']:checked').val();
+	//alert("format: " + format);
+
+	console.log("Print Label! Format: " + format);
+
+	/* switch(format) {
+	case 'EPL-RAW': 	printEPL(); 	break;
+	case 'ZPL-RAW': 	printZPL(); 	break;
+	case 'HTML5-PS': 	printHTML(); 	break;
+	case 'IMAGE-PS': 	printImage(); 	break;
+	*/ 	
+	var funcName;
+	if (format.indexOf('RAW') != -1) {
+		// i.e. printEPL(), printZPL()
+		funcName = 'print' + format.split('-')[0];
+		alert('funcName: "' + funcName + '"');
+	} else {
+		// i.e. printLabel 
+		//var docType = $(this).id.split('_')[0];
+		//docType = docType.charAt(0).toUpperCase() + docType.slice(1);
+		//funcName = 'print' + format.split('-')[0] + docType;
+	}
+
+	// Make sure the function has been defined
+	if (eval("typeof(" + funcName + ")") == 'function') {
+		eval(funcName + '();');
+	} else {
+		alert('Warning, "' + funcName + '" has not been defined!');
+	}	
+	event.preventDefault();
+}
 
 /**
 * Automatically gets called when applet has loaded.
