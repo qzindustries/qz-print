@@ -16,7 +16,7 @@ function deployQZ() {
 		archive:'qz-print.jar', width:1, height:1};
 	var parameters = {jnlp_href: 'qz-print_jnlp.jnlp', 
 		cache_option:'plugin', disable_logging:'false', 
-		initial_focus:'false'};
+		initial_focus:'false', default_printer_only:'false'};
 	if (deployJava.versionCheck("1.7+") == true) {}
 	else if (deployJava.versionCheck("1.6+") == true) {
 		attributes['archive'] = 'jre6/qz-print.jar';
@@ -30,8 +30,9 @@ function deployQZ() {
 */
 function qzReady() {
 	
-	// set updateQueueInfo to trigger every second
-	queueUpdateInterval = setInterval(updateQueueInfo, 1000);
+	// set updateQueueInfo to trigger on a configured delay
+	queueDelay = 100;
+	queueUpdateInterval = setInterval(updateQueueInfo, queueDelay);
 	
 	// Setup our global qz object
 	window["qz"] = document.getElementById('qz');
@@ -107,7 +108,8 @@ function qzDonePrinting() {
 	}
 	
 	// Alert success message
-	alert('Successfully sent print data to "' + qz.getLastPrinter() + '" queue.');
+	//alert('Successfully sent print data to "' + qz.getLastPrinter() + '" queue.');
+	console.log('Successfully sent print data to "' + qz.getLastPrinter() + '" queue.');
 }
 
 /***************************************************************************
@@ -664,24 +666,6 @@ function printHTML(leftMargin, topMargin) {
 	
 	qz.print();
 }
-
-function goPrint() {
-
-	//if (notReady()) { return; }
-
-	if($("input:radio[data-name='EPL']").is(":checked")) {
-         alert('EPL has been checked!');   
-	}
-	
-	$('#submit').click(function() {
-	if($('#EPL').is(':checked')) { alert("it's checked"); }
-	});
-	
-}
-
-
-
-
 	
 /***************************************************************************
 * Prototype function for getting the primary IP or Mac address of a computer
@@ -691,12 +675,19 @@ function goPrint() {
 ***************************************************************************/ 
 function listNetworkInfo() {
 	if (isLoaded()) {
+		
+		// Gets called when findNetworkInfo() finishes
+		window['qzDoneFindingNetwork'] = function() {
+			alert("Primary adapter found: " + qz.getMac() + ", IP: " + qz.getIP());
+			window['qzDoneFindingNetwork'] = null;
+		}
+	
 		// Makes a quick connection to www.google.com to determine the active interface
 		// Note, if you don't wish to use google.com, you can customize the host and port
 		// qz.getNetworkUtilities().setHostname("qzindustries.com");
 		// qz.getNetworkUtilities().setPort(80);
 		qz.findNetworkInfo();
-		alert("Primary adapter found: " + qz.getMac() + ", IP: " + qz.getIP());
+		
 	}
 }
 
@@ -939,7 +930,7 @@ function updateQueueInfo() {
 		queueInfo = $.parseJSON(queueJSON);
 		queueHtml = "<table><thead><tr><th>ID</th><th>State</th><th>Copies</th><th>View Job Data (Raw Only)</th></tr></thead><tbody>";
 		
-		for(var i=0; i < queueInfo.length; i++) {
+		for(var i = queueInfo.length - 1; i >= 0; i--) {
 			queueHtml += "<tr>";
 			queueHtml += "<td>" + queueInfo[i].id + "</td>";
 			var jobState = queueInfo[i].state.replace("STATE_", "");
