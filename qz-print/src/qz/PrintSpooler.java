@@ -22,6 +22,9 @@
 package qz;
 
 import java.applet.Applet;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
@@ -33,6 +36,8 @@ import java.util.ListIterator;
 import java.util.logging.Level;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
+import javax.print.attribute.Attribute;
+import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.PrinterName;
 import qz.exception.InvalidFileTypeException;
@@ -687,6 +692,30 @@ public class PrintSpooler implements Runnable {
             return null;
         }
     }
+
+    /**
+     * Get the paper width of current printer
+     *
+     * @return current printer paper width
+     */
+    public Double getPaperWidth(){
+        try {
+            PrinterJob printerJob = PrinterJob.getPrinterJob();
+            if (currentPrinter != null) {
+                printerJob.setPrintService(currentPrinter.getPrintService());
+                PrintRequestAttributeSet attributes = new HashPrintRequestAttributeSet();
+                PageFormat format = printerJob.pageDialog(attributes);
+                if (format != null) {
+                  Paper paper = format.getPaper();
+                  return Double.valueOf(paper.getWidth());
+                }
+            }
+        }catch (Exception localException) {
+            //TODO something
+        }
+        return new Double("0");
+    }
+
 
     /**
      * Set the paper size for new jobs.
