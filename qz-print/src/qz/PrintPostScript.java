@@ -21,9 +21,6 @@
  */
 package qz;
 
-import com.sun.pdfview.PDFFile;
-import com.sun.pdfview.PDFPage;
-import com.sun.pdfview.PDFRenderer;
 import java.awt.AWTError;
 
 import java.awt.Graphics;
@@ -49,6 +46,7 @@ import javax.print.attribute.Attribute;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaPrintableArea;
 import javax.print.attribute.standard.MediaSize;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 
 /**
@@ -59,7 +57,7 @@ public class PrintPostScript implements Printable {
 
     private final AtomicReference<BufferedImage> bufferedImage = new AtomicReference<BufferedImage>(null);
     private final AtomicReference<ByteBuffer> bufferedPDF = new AtomicReference<ByteBuffer>(null);
-    private final AtomicReference<PDFFile> pdfFile = new AtomicReference<PDFFile>(null);
+    private final AtomicReference<PDDocument> pdfFile = new AtomicReference<PDDocument>(null);
     private final AtomicReference<PrintService> ps = new AtomicReference<PrintService>(null);
     private final AtomicReference<String> jobName = new AtomicReference<String>("jZebra 2D Printing");
     private final AtomicReference<Paper> paper = new AtomicReference<Paper>(null);
@@ -87,9 +85,9 @@ public class PrintPostScript implements Printable {
         if (this.bufferedImage.get() != null) {
             w = bufferedImage.get().getWidth();
             h = bufferedImage.get().getHeight();
-        } else if (this.getPDFFile() != null) {
-            w = (int) getPDFFile().getPage(1).getWidth();
-            h = (int) getPDFFile().getPage(1).getHeight();
+        } else if (this.getPDF() != null) {
+           printPDF(job);
+           return;
         } else {
             throw new PrinterException("Corrupt or missing file supplied.");
         }
@@ -150,6 +148,24 @@ public class PrintPostScript implements Printable {
 
         bufferedImage.set(null);
         bufferedPDF.set(null);
+        pdfFile.set(null);
+    }
+    
+    public  void printPDF(PrinterJob job) {
+        try {
+            job.setPrintService(ps.get());
+            pdfFile.get().silentPrint(job);
+        } catch (PrinterException p) {
+            LogIt.log("Error printing PDF file", p);
+        } finally {
+            try {
+                if (pdfFile.get() != null) {
+                    pdfFile.get().close();
+                }
+            } catch (IOException e) {
+                LogIt.log("Error closing PDF File", e);
+            }
+        }
         pdfFile.set(null);
     }
 
@@ -217,12 +233,12 @@ public class PrintPostScript implements Printable {
         if (this.bufferedImage.get() != null) {
             return printImage(graphics, pageFormat, pageIndex);
         } else if (this.bufferedPDF.get() != null) {
-            // PDF-Renderer plugin
-            if (isClass("com.sun.pdfview.PDFFile")) {
-                return printPDFRenderer(graphics, pageFormat, pageIndex);
-            } else {
-                throw new PrinterException("No suitable PDF render was found in the 'lib' directory.");
+            // we shouldn't ever get here
+            if (isClass("org.apache.pdfbox")) {
+                LogIt.log("org.apache.pdfbox");
+                
             }
+            return 0;
         } else {
             throw new PrinterException("Unupported file/data type was supplied");
         }
@@ -284,7 +300,7 @@ public class PrintPostScript implements Printable {
      printImage(graphics, pageFormat, pageIndex);
      }
     
-     }*/
+     }*
     private int printPDFRenderer(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
 
         PDFFile pdf = getPDFFile();
@@ -327,7 +343,7 @@ public class PrintPostScript implements Printable {
          (int) pageFormat.getImageableY(),
          width,
          (int) pheight);
-         }*//**/
+         }*//**
 
         // render the page
         //Rectangle imgbounds = new Rectangle(pg, pg)
@@ -390,9 +406,9 @@ public class PrintPostScript implements Printable {
          return PAGE_EXISTS;
          * 
          * 
-         */
+         *
 
-    }
+    }*/
 
 
     /*private Rectangle getImageableRectangle(PageFormat format) {
@@ -506,7 +522,7 @@ public class PrintPostScript implements Printable {
      return null;
      }
     
-     */
+     *
     private PDFFile getPDFFile() throws PrinterException {
 
         if (pdfFile.get() == null && bufferedPDF.get() != null) {
@@ -517,7 +533,7 @@ public class PrintPostScript implements Printable {
             }
         }
         return pdfFile.get();
-    }
+    }*/
 
     public void setImage(byte[] imgData) throws IOException {
         InputStream in = new ByteArrayInputStream(imgData);
@@ -528,8 +544,8 @@ public class PrintPostScript implements Printable {
         this.bufferedImage.set(bufferedImage);
     }
 
-    public void setPDF(ByteBuffer bufferedPDF) {
-        this.bufferedPDF.set(bufferedPDF);
+    public void setPDF(PDDocument pdf) {
+        this.pdfFile.set(pdf);
     }
 
     public ByteBuffer getPDF() {

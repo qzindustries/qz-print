@@ -47,6 +47,7 @@ import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import qz.exception.InvalidFileTypeException;
 import qz.exception.NullCommandException;
 import qz.exception.NullPrintServiceException;
@@ -198,7 +199,7 @@ public class PrintApplet extends Applet implements Runnable {
                                 getPrintRaw().append(iw.getImageCommand());
                                 break;
                             case APPEND_PDF:
-                                getPrintPS().setPDF(ByteBuffer.wrap(ByteUtilities.readBinaryFile(file)));
+                                getPrintPS().setPDF(PDDocument.load(new URL(file)));
                                 break;
                             default: // Do nothing
                         }
