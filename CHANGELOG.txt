@@ -1,3 +1,5 @@
+Changes 1.8.8 (9/18/2014)
+- Fixes serial port bug introduced with 1.8.7 only (GitHube issue #34)
 Changes 1.8.7 (7/22/2014)
 - Fixes lockup introduced with Chrome 36.0 (GitHub issue #33)
 Changes 1.8.5 (6/24/2014)
