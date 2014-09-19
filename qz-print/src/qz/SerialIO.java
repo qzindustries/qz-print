@@ -224,7 +224,7 @@ public class SerialIO {
                 int[] beginPos = ByteUtilities.indicesOfSublist(getOutputBuffer().getByteArray(), begin);
                 int[] endPos = ByteUtilities.indicesOfSublist(getOutputBuffer().getByteArray(), end);
                 if (beginPos.length > 0 && endPos.length > 0) {
-                    int _begin = beginPos[beginPos.length -1];
+                    int _begin = beginPos[beginPos.length -1] + begin.length;
                     int _end  = endPos[endPos.length -1];
                     // TODO:  Use specified charset in PrintApplet.
                     LogIt.log(new String(getOutputBuffer().getByteArray(), _begin, _end - _begin));
