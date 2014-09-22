@@ -548,8 +548,12 @@ public class PrintPostScript implements Printable {
         this.pdfFile.set(pdf);
     }
 
-    public ByteBuffer getPDF() {
+    /*public ByteBuffer getPDF() {
         return this.bufferedPDF.get();
+    }*/
+    
+    public PDDocument getPDF() {
+        return this.pdfFile.get();
     }
 
     public BufferedImage getImage() {
