@@ -10,19 +10,14 @@
 	*/
 	deployQZ();
 	
-	/**
-	* Deploys different versions of the applet depending on Java version.
-	* Useful for removing warning dialogs for Java 6.  This function is optional
-	* however, if used, should replace the <applet> method.  Needed to address 
-	* MANIFEST.MF TrustedLibrary=true discrepency between JRE6 and JRE7.
-	*/
 	function deployQZ() {
-		var attributes = {id: "qz", code:'qz.PrintApplet.class', 
+    		var attributes = {id: "qz", code:'qz.PrintApplet.class', 
 			archive:'qz-print.jar', width:1, height:1};
 		var parameters = {jnlp_href: 'qz-print_jnlp.jnlp', 
 			cache_option:'plugin', disable_logging:'false', 
 			initial_focus:'false'};
 		if (deployJava.versionCheck("1.7+") == true) {}
+		else if (deployJava.versionCheck("1.6.0_45+") == true) {}
 		else if (deployJava.versionCheck("1.6+") == true) {
 			delete parameters['jnlp_href'];
 		}
