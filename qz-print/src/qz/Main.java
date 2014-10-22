@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 public class Main {
 
     public static void main(String[] args) {
-        JOptionPane.showMessageDialog(null, "This program cannot be run interactively.  Please visit: http://qzindustries.com", "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "This program cannot yet be run interactively.  Please visit: http://qzindustries.com", "Error", JOptionPane.ERROR_MESSAGE);
         System.exit(0);
     }
 }
