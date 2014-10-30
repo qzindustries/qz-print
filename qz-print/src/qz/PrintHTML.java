@@ -91,29 +91,37 @@ public class PrintHTML extends JLabel implements Printable {
         j.setUndecorated(true);
         j.setLayout(new FlowLayout());
         this.setBorder(null);
-        
-        for (String s : getHTMLDataArray()) {
-            this.setText(s + "</html>");
-            j.add(this);
+
+        try{
+            for (String s : getHTMLDataArray()) {
+                this.setText(s + "</html>");
+                j.add(this);
 
 
-            j.pack();
-            j.setExtendedState(j.ICONIFIED);
-            j.setVisible(true);
+                j.pack();
+                j.setExtendedState(j.ICONIFIED);
+                j.setVisible(true);
 
-            // Elimate any margins
-            HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();             
-            attr.add(new MediaPrintableArea(0f, 0f, getWidth()/PrintPostScript.DPI, getHeight()/PrintPostScript.DPI, MediaPrintableArea.INCH));               
+                // Elimate any margins
+                HashPrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();             
+                attr.add(new MediaPrintableArea(0f, 0f, getWidth()/PrintPostScript.DPI, getHeight()/PrintPostScript.DPI, MediaPrintableArea.INCH));               
 
-            PrinterJob job = PrinterJob.getPrinterJob();    
-            job.setPrintService(ps.get());
-            job.setPrintable(this);
-            job.setJobName(jobName.get());
-            job.print(attr);
-            j.setVisible(false);
+                PrinterJob job = PrinterJob.getPrinterJob();    
+                job.setPrintService(ps.get());
+                job.setPrintable(this);
+                job.setJobName(jobName.get());
+                job.print(attr);
+                j.setVisible(false);
+            }
         }
-        j.dispose();
-        clear();
+        catch(PrinterException e){
+            throw e;
+        }
+        
+        finally{
+            j.dispose();
+            clear();
+        }
     }
     
     public void setPrintParameters(PrintApplet a) {
