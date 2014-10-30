@@ -86,12 +86,12 @@ public class PrintHTML extends JLabel implements Printable {
     //    return super.getText();
     //}
     
-      public void print() throws PrinterException {
+    public void print() throws PrinterException {
         JFrame j = new JFrame(jobName.get());
         j.setUndecorated(true);
         j.setLayout(new FlowLayout());
         this.setBorder(null);
-        
+
         try{
             for (String s : getHTMLDataArray()) {
                 this.setText(s + "</html>");
@@ -113,14 +113,14 @@ public class PrintHTML extends JLabel implements Printable {
                 job.print(attr);
                 j.setVisible(false);
             }
+        }
+        catch(PrinterException e){
+            throw e;
+        }
+        
+        finally{
             j.dispose();
             clear();
-            } 
-        catch(Exception e){
-            j.dispose();
-            clear();
-            
-            throw new PrinterException(e.toString());
         }
     }
     
