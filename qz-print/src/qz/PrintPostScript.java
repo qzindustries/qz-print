@@ -28,8 +28,11 @@ import java.awt.AWTError;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.Transparency;
 
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
@@ -73,6 +76,29 @@ public class PrintPostScript implements Printable {
 
     public PrintPostScript() {
     }
+    
+    /**
+     * Rotates a buffered image by the specified angle in radians.
+     * Note:  To rotate in degrees convert to radians first using:
+     * <code>Math.toRadians(degree);</code>
+     * @param image BufferedImage to rotate
+     * @param angle in radians
+     * @return 
+     */
+    public static BufferedImage rotate(BufferedImage image, double angle) {
+        LogIt.log("Rotating image " + angle );
+        double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
+        int w = image.getWidth(), h = image.getHeight();
+        int neww = (int)Math.floor(w*cos+h*sin), newh = (int)Math.floor(h*cos+w*sin);
+        GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDefaultConfiguration();
+        BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
+        Graphics2D g = result.createGraphics();
+        g.translate((neww-w)/2, (newh-h)/2);
+        g.rotate(angle, w/2, h/2);
+        g.drawRenderedImage(image, null);
+        g.dispose();
+        return result;
+    }
 
     /**
      * Can be called directly
@@ -83,6 +109,14 @@ public class PrintPostScript implements Printable {
         PrinterJob job = PrinterJob.getPrinterJob();
         int w;
         int h;
+        
+        if (this.paperSize.get() != null && this.paperSize.get().getRotation() > 0) {
+            this.bufferedImage.set(rotate(this.bufferedImage.get(), Math.toRadians(this.paperSize.get().getRotation())));
+            if (paperSize.get() != null) {
+                // Readjust our paperSize after rotation
+                 paperSize.get().setAutoSize(this.bufferedImage.get());
+            }
+        }
 
         if (this.bufferedImage.get() != null) {
             w = bufferedImage.get().getWidth();

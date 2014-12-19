@@ -37,7 +37,6 @@ import java.nio.charset.IllegalCharsetNameException;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.text.StringCharacterIterator;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -64,7 +63,7 @@ import qz.reflection.ReflectException;
 public class PrintApplet extends Applet implements Runnable {
 
     private static final AtomicReference<Thread> thisThread = new AtomicReference<Thread>(null);
-    public static final String VERSION = "1.8.9";
+    public static final String VERSION = "1.8.10";
     private static final long serialVersionUID = 2787955484074291340L;
     public static final int APPEND_XML = 1;
     public static final int APPEND_RAW = 2;
@@ -779,6 +778,27 @@ public boolean notifyBrowser(String function, Object[] o) {
      */
     public String getOrientation() {
         return this.paperSize.getOrientationDescription();
+    }
+    
+    /**
+     * Returns the rotation as it has been recently defined
+     *
+     * @return
+     */
+    public String getRotation() {
+        return "" + getPaperSize().getRotation();
+    }
+    
+    /**
+     * Sets the rotation in degrees of the image being appended (PS only)
+     * @param rotation 
+     */
+    public void setRotation(String rotation) {
+        if (paperSize != null) {
+            paperSize.setRotation(Integer.parseInt(rotation));
+        } else {
+            LogIt.log(Level.WARNING, "Cannot set rotation until after setting paper size using setPaperSize(...)");
+        }
     }
 
     /*
