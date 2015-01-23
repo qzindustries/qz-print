@@ -1,6 +1,7 @@
 Changes 1.8.10 (1/5/2015)
 - Added rotation support via qz.setRotation(angle);
 - Remove hanging window on printPS() error (GitHub issue #40)
+- Added separate_jvm applet parameter
 Changes 1.8.9 (9/18/2014)
 - Fixes invalid STX (x02) character in serial port messages
 - Fixes serial port bug introduced with 1.8.7 only (GitHube issue #34)
