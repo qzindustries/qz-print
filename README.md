@@ -1,4 +1,4 @@
-qz-print
+We've moved
 ========
 
-Free browser applet for sending documents and raw commands to a printer.
+https://github.com/qzind/qz-print
